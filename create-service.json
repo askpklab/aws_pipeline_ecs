@@ -1,10 +1,10 @@
 {
-    "taskDefinition": "ecs-cluster:1",
+    "taskDefinition": "ecs-demo:1",
     "cluster": "ecs-cluster",
     "loadBalancers": [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:262077174210:listener/app/lb-ecs/fa94581645952d34/26e5e8992e23e176",
-            "containerName": "sample-website",
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:262077174210:targetgroup/target-group-1/3ea29b5513f84da6",
+            "containerName": "task-definition-demo",
             "containerPort": 80
         }
     ],
