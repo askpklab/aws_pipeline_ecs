@@ -1,5 +1,5 @@
 {
-    "executionRoleArn": "arn:aws:iam::262077174210:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::262077174210:role/role-ecs-codedeploy",
     "containerDefinitions": [
         {
             "name": "task-definition-demo",
