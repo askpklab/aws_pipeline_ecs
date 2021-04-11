@@ -1,9 +1,9 @@
 {
-    "taskDefinition": "ecs-prod:1",
+    "taskDefinition": "ecs-prod:6",
     "cluster": "prod-cluster",
     "loadBalancers": [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:262077174210:targetgroup/target1/21f4c3f3cb3f2abe",
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-2:262077174210:targetgroup/t1/c3d72246f0885bdc",
             "containerName": "task-definition-prod",
             "containerPort": 80
         }

@@ -3,7 +3,7 @@
     "cluster": "ecs-cluster",
     "loadBalancers": [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:262077174210:targetgroup/target-group-1/3ea29b5513f84da6",
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:262077174210:targetgroup/t1/20eb3742ce32956a",
             "containerName": "task-definition-demo",
             "containerPort": 80
         }
