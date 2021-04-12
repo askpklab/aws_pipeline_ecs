@@ -167,7 +167,7 @@ Resources:
       ContainerDefinitions:
         - Name: DemoApp
           #Image: 'nginxdemos/hello:latest'
-          Image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/pkcodepipeline:latest'
+          Image: '${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/pkcodepipeline:latest'
           Essential: true
           PortMappings:
             - HostPort: 80
