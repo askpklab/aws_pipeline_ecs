@@ -2,13 +2,15 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   Vpc:
     Type: 'AWS::EC2::VPC::Id'
-    Default: vpc-3d7f245b 
+    Default: vpc-58ce4a25
+
   Subnet1:
     Type: 'AWS::EC2::Subnet::Id'
-    Default: subnet-ace2e381
+    Default: subnet-0cb4dc6a
+
   Subnet2:
     Type: 'AWS::EC2::Subnet::Id'
-    Default: subnet-ce778686
+    Default: subnet-b9f2caf4
 
 Hooks:
   CodeDeployBlueGreenHook:

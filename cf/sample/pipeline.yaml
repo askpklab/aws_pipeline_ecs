@@ -37,6 +37,18 @@ Parameters:
     Default: github-codepipeline-app
     AllowedPattern: "[A-Za-z0-9-]+"
 
+  #Vpc:
+  #  Type: 'AWS::EC2::VPC::Id'
+  #  Default: vpc-58ce4a25
+
+  #Subnet1:
+  #  Type: 'AWS::EC2::Subnet::Id'
+  #  Default: subnet-0cb4dc6a
+
+  #Subnet2:
+  #  Type: 'AWS::EC2::Subnet::Id'
+  #  Default: subnet-b9f2caf4
+
 Resources:
   PipelineArtifactsBucketpk:
     Type: AWS::S3::Bucket
@@ -88,6 +100,10 @@ Resources:
             RoleArn: !GetAtt CloudformationRole.Arn
             StackName: !Ref ApplicationStackName
             TemplatePath: !Sub "SourceCode::cf/sample/ecs-blue-green.yaml"
+            #ParameterOverrides: '{!Ref VPC, !Ref Subnet1, !Ref Subnet2}'
+            #ParameterOverrides: '{"Vpc": { "Fn::GetParm" : ["Vpc"]}}'
+            #ParameterOverrides: '{"Vpc": {!Ref Vpc}}'
+            
           RunOrder: 1
 
   # 'GithubWebhook' satisfies two requirements:
