@@ -49,13 +49,99 @@ Parameters:
   #  Type: 'AWS::EC2::Subnet::Id'
   #  Default: subnet-b9f2caf4
 
+
 Resources:
+  NameRepositoryECR:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: !Ref AWS::StackName
   PipelineArtifactsBucketpk:
     Type: AWS::S3::Bucket
     Properties:
       VersioningConfiguration:
         Status: Enabled
+  # Build
+  #PipelineBuildS3:
+  #    Type: AWS::S3::Bucket
+  CodeBuildRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - sts:AssumeRole
+              Principal:
+                Service: codebuild.amazonaws.com
+        Policies:
+          - PolicyName: S3Access
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - s3:*
+                  Resource:
+                    !Sub
+                      - arn:aws:s3:::${PipelineArtifactsBucketpk}*
+                      - S3Bucket: !Ref PipelineArtifactsBucketpk
+          - PolicyName: ECRAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - ecr:*
+                  Resource: '*'
+                      
+          - PolicyName: ServicesAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:*
+                    - codecommit:*
+                  Resource: '*'
 
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Ref AWS::StackName
+      Description: App on ECS.
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        Type: CODEPIPELINE
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: linuxContainer
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+        PrivilegedMode: yes
+        EnvironmentVariables:
+        - Name: APP_NAME
+          Value: !Ref AWS::StackName
+        - Name: APP_IMAGE
+          Value: !Sub ${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/${AWS::StackName}:latest
+        - Name: IMAGE_TAG
+          Value: latest
+        - Name: IMAGE_REPO_NAME
+          Value: !Sub ${AWS::StackName}
+        - Name: AWS_DEFAULT_REGION
+          Value: us-east-1
+        - Name: AWS_ACCOUNT_ID
+          Value: !Sub ${AWS::AccountId}
+      TimeoutInMinutes: 10
+      Tags:
+        - Key: Name
+          Value: !Ref AWS::StackName
+        - Key: role
+          Value: !Ref AWS::StackName
+
+###
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -84,6 +170,21 @@ Resources:
             OAuthToken: !Ref GitHubOAuthToken
           RunOrder: 1
       # Build and Deploy, etc., stages would follow. Here is an example
+      - Name: Build
+        Actions:
+          - Name: Build
+            RunOrder: 1
+            Configuration:
+              ProjectName: !Ref AWS::StackName
+            InputArtifacts:
+              - Name: SourceCode
+            ActionTypeId:
+              Version: 1
+              Category: Build
+              Owner: AWS
+              Provider: CodeBuild
+            OutputArtifacts:
+              - Name: !Sub ${AWS::StackName}-built      
       - Name: Deploy
         Actions:
         - Name: CloudFormationDeploy
