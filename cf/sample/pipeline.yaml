@@ -204,7 +204,7 @@ Resources:
             #ParameterOverrides: '{!Ref VPC, !Ref Subnet1, !Ref Subnet2}'
             #ParameterOverrides: '{"Vpc": { "Fn::GetParm" : ["Vpc"]}}'
             #ParameterOverrides: '{"Vpc": {!Ref Vpc}}'
-            
+            #ParameterOverrides: {"AWSRegion": "region1"}
           RunOrder: 1
 
   # 'GithubWebhook' satisfies two requirements:

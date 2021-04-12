@@ -3,11 +3,9 @@ Parameters:
   Vpc:
     Type: 'AWS::EC2::VPC::Id'
     Default: vpc-58ce4a25
-
   Subnet1:
     Type: 'AWS::EC2::Subnet::Id'
     Default: subnet-0cb4dc6a
-
   Subnet2:
     Type: 'AWS::EC2::Subnet::Id'
     Default: subnet-b9f2caf4
@@ -17,6 +15,9 @@ Parameters:
   ImageTag:
     Type: String
     Default: latest
+  AWSRegion:
+    Type: String
+    Default: us-east-1
 
 Hooks:
   CodeDeployBlueGreenHook:
@@ -167,7 +168,7 @@ Resources:
       ContainerDefinitions:
         - Name: DemoApp
           #Image: 'nginxdemos/hello:latest'
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/${ImageRepoName}:${ImageTag}
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWSRegion}.amazonaws.com/${ImageRepoName}:${ImageTag}
           Essential: true
           PortMappings:
             - HostPort: 80
