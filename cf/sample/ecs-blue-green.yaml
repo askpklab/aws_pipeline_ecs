@@ -11,6 +11,12 @@ Parameters:
   Subnet2:
     Type: 'AWS::EC2::Subnet::Id'
     Default: subnet-b9f2caf4
+  ImageRepoName: 
+    Type: String
+    Default: pkcodepipeline
+  ImageTag:
+    Type: String
+    Default: latest
 
 Hooks:
   CodeDeployBlueGreenHook:
@@ -160,7 +166,8 @@ Resources:
         - Arn
       ContainerDefinitions:
         - Name: DemoApp
-          Image: 'nginxdemos/hello:latest'
+          #Image: 'nginxdemos/hello:latest'
+          Image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${ !Ref ImageRepoName }:${ !Ref ImageTag}'
           Essential: true
           PortMappings:
             - HostPort: 80
